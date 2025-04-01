@@ -1,0 +1,105 @@
+
+CSC2106 IoT Lab Exercise Quiz Cheatsheet
+=======================================
+
+This cheat sheet covers all 5 labs: REST, BLE, LoRa, MQTT, and Mesh.
+
+------------------------------------------------------------
+1. REST (Representational State Transfer)
+------------------------------------------------------------
+
+🔹 Theory:
+- REST is an architectural style using HTTP to access and modify resources.
+- Common HTTP Methods:
+  - GET: Retrieve data
+  - POST: Submit data
+  - PUT: Update data
+  - DELETE: Remove data
+- REST is stateless – each request must contain all required information.
+
+🔹 Code Concepts:
+- WiFi connection using WiFi.begin(ssid, password);
+- HTTPClient for making requests:
+    http.begin("http://server.com/data");
+    http.GET(); → http.getString();
+- Handles response: if "LED ON", set GPIO HIGH, etc.
+- `http.end()` is important to close connection.
+- Loop sends requests every 5 seconds to poll server.
+
+
+------------------------------------------------------------
+2. BLE (Bluetooth Low Energy)
+------------------------------------------------------------
+
+🔹 Theory:
+- BLE enables short-range, low-power wireless communication.
+- Peripheral (Server): Advertises services.
+- Central (Client): Connects to peripherals.
+- Concepts: UUID, Service, Characteristic, Notify, Read.
+
+🔹 Code Concepts:
+[BLE_server.ino]
+- Uses BLEDevice, BLEServer, BLECharacteristic.
+- Creates service + characteristic with UUIDs.
+- characteristic->setValue() + characteristic->notify().
+
+[BLE_client.ino]
+- Scans for devices, connects to server with matching UUID.
+- Gets service, reads characteristic value with readValue().
+
+
+------------------------------------------------------------
+3. LoRa (Long Range)
+------------------------------------------------------------
+
+🔹 Theory:
+- LoRa supports long-range, low-power data transmission.
+- Works in unlicensed bands (e.g., 868 MHz, 915 MHz).
+- Ideal for remote sensing, agriculture, low-bandwidth IoT.
+
+🔹 Code Concepts:
+[LoRa_Tx.ino]
+- Initializes module with LoRa.begin(915E6);
+- Sends "Hello X" every 5 seconds using beginPacket(), print(), endPacket().
+
+[LoRa_Rx.ino]
+- Listens for packets using parsePacket().
+- Reads data using LoRa.readString().
+
+------------------------------------------------------------
+4. MQTT (Message Queuing Telemetry Transport)
+------------------------------------------------------------
+
+🔹 Theory:
+- MQTT is a lightweight publish-subscribe protocol.
+- Broker routes messages between clients.
+- Topics are used to publish/subscribe (e.g., "esp32/test").
+- QoS Levels: 0 (at most once), 1 (at least once), 2 (exactly once).
+
+🔹 Code Concepts:
+[MQTT.ino]
+- Uses PubSubClient and WiFi.
+- Connects to public broker (e.g., broker.hivemq.com).
+- Publishes random number to topic using client.publish().
+- Receives messages via client.setCallback() → callback().
+
+------------------------------------------------------------
+5. Wireless Mesh Networking
+------------------------------------------------------------
+
+🔹 Theory:
+- Mesh networks allow each node to connect to others and relay messages.
+- No central point = robust and self-healing.
+- Used for large-scale IoT deployments.
+
+🔹 Code Concepts:
+[Mesh.ino]
+- Uses painlessMesh library.
+- mesh.init() sets up network with SSID, password, port.
+- mesh.sendBroadcast("Hello") sends to all nodes.
+- mesh.onReceive(&receivedCallback) handles incoming messages.
+- mesh.update() must be called in loop() to maintain network.
+
+------------------------------------------------------------
+
+END OF CHEATSHEET
